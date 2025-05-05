@@ -15,8 +15,10 @@ steps:
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'Custom'
-    customJavaHome: $(JAVA_HOME_17_X64)  # Use existing JAVA_HOME_17_X64 environment variable
+    javaHomeOption: 'None'  # Don't specify custom Java home
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+
+env:
+  JAVA_HOME: $(JAVA_HOME_17_X64)  # Set the JAVA_HOME environment variable to your existing Java installation
