@@ -8,11 +8,12 @@ jobs:
 - job: Build
   steps:
     - script: |
-        echo "Setting up Java 17 environment"
-        set JAVA_HOME=C:\Program Files\Zulu\zulu-17
+        echo Setting up Java 17 environment
+        set JAVA_HOME="C:\Program Files\Zulu\zulu-17"
         set PATH=%JAVA_HOME%\bin;%PATH%
-        echo "JAVA_HOME is set to %JAVA_HOME%"
+        echo JAVA_HOME is set to %JAVA_HOME%
       displayName: 'Set up Java 17'
+      shell: cmd
 
     - task: Maven@3
       inputs:
