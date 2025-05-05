@@ -1,7 +1,7 @@
 trigger:
   - main
 
-# tell the JavaToolInstaller where your Zulu‑17 really lives (root, no “\bin”)
+# tell the JavaToolInstaller where your Zulu‑17 really lives
 variables:
   JAVA_HOME_17_X64: 'C:\Program Files\Zulu\zulu-17'
 
@@ -10,26 +10,26 @@ pool:
 
 jobs:
 - job: Build
-  displayName: Build with Java 17 & Maven@4
   steps:
 
     # 1) point the installer at your pre‑installed JDK
     - task: JavaToolInstaller@0
       displayName: 'Activate Java 17 (Zulu)'
       inputs:
-        versionSpec: '17'
-        jdkArchitectureOption: 'x64'
-        jdkSourceOption: 'PreInstalled'
+        versionSpec: '17'               # major version
+        jdkArchitectureOption: 'x64'    # matches your install
+        jdkSourceOption: 'PreInstalled' # use the env var above
 
-    # 2) run Maven using the new Maven@4 task
+    # 2) run Maven@4, telling it to use the JDK we just activated
     - task: Maven@4
       displayName: 'Maven@4: clean package'
       inputs:
-        mavenPOMFile: 'pom.xml'          # path to your POM :contentReference[oaicite:2]{index=2}
-        options: '-Xmx3072m'             # JVM options :contentReference[oaicite:3]{index=3}
-        goals: 'clean package'           # Maven goals :contentReference[oaicite:4]{index=4}
-        publishJUnitResults: true        # publish test results :contentReference[oaicite:5]{index=5}
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        javaHomeOption: 'JDKVersion'     # pick up JDK from JavaToolInstaller
-        jdkVersionOption: '17'           # must match versionSpec above
+        mavenPOMFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'         # JVM heap settings → MAVEN_OPTS
+        options: ''                       # Maven CLI flags (e.g. -DskipTests)
+        javaHomeOption: 'JDKVersion'      # pick up the JDK from JavaToolInstaller
+        jdkVersionOption: '17'            # must match versionSpec
         jdkArchitectureOption: 'x64'
+        goals: 'clean package'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
