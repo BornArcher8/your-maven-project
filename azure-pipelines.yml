@@ -5,11 +5,16 @@ pool:
   name: Default    # Replace with your custom agent pool name if needed
   demands:
     - agent.os -equals Windows_NT
-    - JAVA_HOME_17_X64 -exists  # Ensures the agent has the correct JDK
+    - JAVA_HOME_17_X64  # Checking if JAVA_HOME_17_X64 exists
 
 steps:
 - checkout: self
   fetchDepth: 1  # Fetch only the latest commit from the repo
+
+- task: JavaToolInstaller@0  # Task to install JDK
+  inputs:
+    versionSpec: '17'  # Specify JDK 17 version
+    jdkArchitecture: 'x64'
 
 - task: Maven@4  # Use the latest version of Maven task
   inputs:
