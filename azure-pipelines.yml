@@ -1,7 +1,7 @@
 trigger:
   - main
 
-# tell the JavaToolInstaller where your Zulu‑17 really lives
+# tell the JavaToolInstaller where your Zulu‑17 really lives (root, no “\bin”)
 variables:
   JAVA_HOME_17_X64: 'C:\Program Files\Zulu\zulu-17'
 
@@ -10,25 +10,26 @@ pool:
 
 jobs:
 - job: Build
+  displayName: Build with Java 17 & Maven@4
   steps:
 
     # 1) point the installer at your pre‑installed JDK
     - task: JavaToolInstaller@0
       displayName: 'Activate Java 17 (Zulu)'
       inputs:
-        versionSpec: '17'               # major version
-        jdkArchitectureOption: 'x64'    # matches your install
-        jdkSourceOption: 'PreInstalled' # use the env var above
-
-    # 2) run Maven, telling it to use the JDK we just activated
-    - task: Maven@3
-      displayName: 'Maven: clean package'
-      inputs:
-        mavenPomFile: 'pom.xml'
-        mavenOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'     # pick up the JDK from JavaToolInstaller
-        jdkVersionOption: '17'           # must match versionSpec
+        versionSpec: '17'
         jdkArchitectureOption: 'x64'
-        goals: 'clean package'
-        publishJUnitResults: true
+        jdkSourceOption: 'PreInstalled'
+
+    # 2) run Maven using the new Maven@4 task
+    - task: Maven@4
+      displayName: 'Maven@4: clean package'
+      inputs:
+        mavenPOMFile: 'pom.xml'          # path to your POM :contentReference[oaicite:2]{index=2}
+        options: '-Xmx3072m'             # JVM options :contentReference[oaicite:3]{index=3}
+        goals: 'clean package'           # Maven goals :contentReference[oaicite:4]{index=4}
+        publishJUnitResults: true        # publish test results :contentReference[oaicite:5]{index=5}
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        javaHomeOption: 'JDKVersion'     # pick up JDK from JavaToolInstaller
+        jdkVersionOption: '17'           # must match versionSpec above
+        jdkArchitectureOption: 'x64'
