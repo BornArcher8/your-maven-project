@@ -2,19 +2,24 @@ trigger:
 - main
 
 pool:
-  name: Default
+  name: Default  # Uses your local agent
 
 jobs:
 - job: Build
   steps:
-    - task: Maven@3
-      inputs:
-        mavenPomFile: 'pom.xml'
-        mavenOptions: '-Xmx3072m'
-        javaHomeOption: 'Custom'
-        customJavaHome: 'C:\Program Files\Zulu\zulu-17'
-        jdkUserInputPath: 'C:\Program Files\Zulu\zulu-17\bin\java.exe'  # Provide explicit path to java.exe
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        goals: 'package'
+    - script: |
+        echo Setting up JAVA_HOME and Maven
+        setx JAVA_HOME "C:\Program Files\Zulu\zulu-17" /M
+        setx PATH "C:\Program Files\Zulu\zulu-17\bin;C:\Program Files\Maven\apache-maven-3.9.9\bin;%PATH%" /M
+      displayName: 'Configure Java and Maven'
+
+    - script: |
+        echo Checking Java and Maven versions
+        java -version
+        mvn -version
+      displayName: 'Verify Java and Maven'
+
+    - script: |
+        mvn clean package
+      workingDirectory: $(Build.SourcesDirectory)
       displayName: 'Run Maven Build'
