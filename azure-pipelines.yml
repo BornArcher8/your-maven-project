@@ -1,27 +1,36 @@
 trigger:
-- main
+  - main
 
 pool:
-  name: Default  # Must match the name of your local agent pool
+  name: Default    # your self‑hosted Windows pool
 
 jobs:
 - job: Build
   steps:
+
+    # 1) Install / register Java 17 from the pre‑installed JDK on the machine
+    - task: JavaToolInstaller@0
+      displayName: 'Use Java 17 (Zulu)'
+      inputs:
+        versionSpec: '17'               # the JDK major version you want
+        jdkArchitectureOption: 'x64'    # matches your Zulu install
+        jdkSourceOption: 'PreInstalled' # use the JDK already on the agent
+
+    # 2) (Optional) verify
     - script: |
-        echo Setting up JAVA_HOME and updating PATH
-        set JAVA_HOME=C:\Program Files\Zulu\zulu-17
-        set PATH=C:\Program Files\Zulu\zulu-17\bin;C:\Program Files\Maven\apache-maven-3.9.9\bin;%PATH%
         java -version
         mvn -version
-      displayName: 'Configure Java and Maven'
+      displayName: 'Verify Java & Maven'
 
+    # 3) Run your Maven build
     - task: Maven@3
+      displayName: 'Maven: clean package'
       inputs:
         mavenPomFile: 'pom.xml'
         mavenOptions: '-Xmx3072m'
-        javaHomeOption: 'Custom'
-        jdkUserInputPath: 'C:\Program Files\Zulu\zulu-17'
+        javaHomeOption: 'JDKVersion'    # pick up the JDK from step 1
+        jdkVersionOption: '17'          # must match versionSpec above
+        jdkArchitectureOption: 'x64'
         publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        goals: 'package'
-      displayName: 'Run Maven Build'
+        testResultsFiles: '**/surefire‑reports/TEST-*.xml'
+        goals: 'clean package'
