@@ -12,7 +12,8 @@ jobs:
         mavenPomFile: 'pom.xml'
         mavenOptions: '-Xmx3072m'
         javaHomeOption: 'Custom'
-        customJavaHome: 'C:\Program Files\Zulu\zulu-17'  # Directly specify Java path
+        customJavaHome: 'C:\Program Files\Zulu\zulu-17'
+        jdkUserInputPath: 'C:\Program Files\Zulu\zulu-17\bin\java.exe'  # Provide explicit path to java.exe
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
         goals: 'package'
