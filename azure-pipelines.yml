@@ -4,9 +4,6 @@ trigger:
 pool:
   name: Default
 
-variables:
-  JAVA_HOME: '/usr/lib/jvm/java-21-openjdk'
-
 jobs:
 - job: Build
   steps:
@@ -14,10 +11,6 @@ jobs:
       displayName: 'Maven@4: clean package'
       inputs:
         mavenPOMFile: 'pom.xml'
-        mavenOptions: '-Xmx3072m'
-        options: ''
-        javaHomeOption: 'Path'
-        jdkDirectory: '$(JAVA_HOME)'
         goals: 'clean package'
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
