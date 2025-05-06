@@ -1,35 +1,23 @@
 trigger:
   - main
 
-# tell the JavaToolInstaller where your Zulu‑17 really lives
-variables:
-  JAVA_HOME_17_X64: 'C:\Program Files\Zulu\zulu-17'
-
 pool:
   name: Default
+
+variables:
+  JAVA_HOME: '/usr/lib/jvm/java-21-openjdk'
 
 jobs:
 - job: Build
   steps:
-
-    # 1) point the installer at your pre‑installed JDK
-    - task: JavaToolInstaller@0
-      displayName: 'Activate Java 17 (Zulu)'
-      inputs:
-        versionSpec: '17'               # major version
-        jdkArchitectureOption: 'x64'    # matches your install
-        jdkSourceOption: 'PreInstalled' # use the env var above
-
-    # 2) run Maven@4, telling it to use the JDK we just activated
     - task: Maven@4
       displayName: 'Maven@4: clean package'
       inputs:
         mavenPOMFile: 'pom.xml'
-        mavenOptions: '-Xmx3072m'         # JVM heap settings → MAVEN_OPTS
-        options: ''                       # Maven CLI flags (e.g. -DskipTests)
-        javaHomeOption: 'JDKVersion'      # pick up the JDK from JavaToolInstaller
-        jdkVersionOption: '17'            # must match versionSpec
-        jdkArchitectureOption: 'x64'
+        mavenOptions: '-Xmx3072m'
+        options: ''
+        javaHomeOption: 'Path'
+        jdkDirectory: '$(JAVA_HOME)'
         goals: 'clean package'
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
