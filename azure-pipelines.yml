@@ -7,7 +7,6 @@ pool:
 jobs:
 - job: Build
   steps:
-    # Step to run Maven clean package
     - task: Maven@4
       displayName: 'Maven@4: clean package'
       inputs:
@@ -16,10 +15,10 @@ jobs:
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
 
-    # Step to publish the JAR artifact
+    # Now publish the single JAR artifact
     - task: PublishBuildArtifacts@1
       displayName: 'Publish JAR artifact'
       inputs:
-        PathtoPublish: 'target'  # This is the directory where your JAR will be generated
-        ArtifactName: 'drop'     # Name for the artifact (you can customize this name)
-        publishLocation: 'Container'  # Artifact will be published to Azure DevOps container
+        PathtoPublish: 'target/maven-junit5-example-1.0-SNAPSHOT.jar'
+        ArtifactName: 'my-app-jar'
+        publishLocation: 'Container'
