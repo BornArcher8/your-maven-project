@@ -14,3 +14,11 @@ jobs:
         goals: 'clean package'
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
+
+    # Publish the build artifact
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish artifact'
+      inputs:
+        PathtoPublish: 'target' # This is where Maven typically places the JAR file
+        ArtifactName: 'drop'    # You can name the artifact
+        publishLocation: 'Container'
