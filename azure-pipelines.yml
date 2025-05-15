@@ -22,4 +22,3 @@ jobs:
         PathtoPublish: 'target/maven-junit5-example-1.0-SNAPSHOT.jar'
         ArtifactName: 'my-app-jar'
         publishLocation: 'Container'
-        #Trying CI/CD
