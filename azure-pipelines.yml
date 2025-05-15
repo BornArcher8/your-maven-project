@@ -15,7 +15,6 @@ jobs:
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
 
-    # Now publish the single JAR artifact
     - task: PublishBuildArtifacts@1
       displayName: 'Publish JAR artifact'
       inputs:
